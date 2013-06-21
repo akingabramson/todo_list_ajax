@@ -3,4 +3,8 @@ class TodoList < ActiveRecord::Base
 
   has_many :todo_items
   belongs_to :user
+
+  def as_json(options = {})
+    super(options.merge(:include => :todo_items))
+  end
 end

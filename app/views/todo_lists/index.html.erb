@@ -6,12 +6,14 @@
 
 <script>
 	$(function () {
-		var LISTS = <%= @lists.to_json(:include => :todo_items).html_safe %>
+		var LISTS = <%= @lists.to_json.html_safe %>
 
 		_.each(LISTS, function(list) {
+			// wrap list in a div
 			var list_div = $("<div>");
 			list_div.attr('id', "list"+list.id+"div");
 			
+
 			var list_link = $("<a>");
 			list_link.addClass("list_link");
 			list_link.attr({'id': 'list'+list.id,
@@ -19,23 +21,33 @@
 			list_link.text(list.title);
 			list_div.append(list_link);
 
-			_.each(list, function(list_item) {
-				var list_item = $("<ul>");
+			// add link to div
+
+			var items = list.todo_items;
+			_.each(items, function(item) {
+				// each item might have sub-items, so we put it in a ul
+				list_wrapper = $("<ul>");
+				list_wrapper.addClass("list_wrapper");
+
+				var list_item = $("<li>");
+				list_item.addClass("hidden");
 				list_item.addClass("list_item");
-				list_item.attr({'id': 'list'+list.id+'item'+list_item.id});
-				list_item.text(list_item.text);
+				list_item.attr({'id': 'list'+list.id+'item'+item.id});
+				list_item.text(item.task);
 
-				list_div.append(list_item);
-
+				list_wrapper.append(list_item)
+				list_div.append(list_wrapper);
 			});
-
 			// append new item form here
 
 			$('#add_here').append(list_div);
 		});
 		
 		$('.list_link').on('click', function(event) {
-			console.log(event.currentTarget.id)
+			var link = $(event.currentTarget);					
+			var list_div = link.closest('div')
+			var items = list_div.find(".list_item");
+			items.toggleClass("hidden");
 		// append the items to the list
 		});
 	})

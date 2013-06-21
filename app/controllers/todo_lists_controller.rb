@@ -1,6 +1,6 @@
 class TodoListsController < ApplicationController
   def index
-    @lists = TodoList.all
+    @lists = TodoList.includes(:todo_items).all
   end
 
   def create
