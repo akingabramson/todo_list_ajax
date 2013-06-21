@@ -1,7 +1,46 @@
 <h2>To Do Lists </h2>
 
-<script type="application/json" id="lists_json" >
-  <%= @lists.to_json(:include => :todo_items) %>
-</script> 
+<div id="add_here"> </div>
+
+<a href="#" id="data_list_id">
+
+<script>
+	$(function () {
+		var LISTS = <%= @lists.to_json(:include => :todo_items).html_safe %>
+
+		_.each(LISTS, function(list) {
+			var list_div = $("<div>");
+			list_div.attr('id', "list"+list.id+"div");
+			
+			var list_link = $("<a>");
+			list_link.addClass("list_link");
+			list_link.attr({'id': 'list'+list.id,
+											'href': '#'});
+			list_link.text(list.title);
+			list_div.append(list_link);
+
+			_.each(list, function(list_item) {
+				var list_item = $("<ul>");
+				list_item.addClass("list_item");
+				list_item.attr({'id': 'list'+list.id+'item'+list_item.id});
+				list_item.text(list_item.text);
+
+				list_div.append(list_item);
+
+			});
+
+			// append new item form here
+
+			$('#add_here').append(list_div);
+		});
+		
+		$('.list_link').on('click', function(event) {
+			console.log(event.currentTarget.id)
+		// append the items to the list
+		});
+	})
+
+	
+</script>
 
 
