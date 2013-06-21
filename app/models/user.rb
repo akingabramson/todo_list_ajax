@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   attr_accessible :username, :password
   attr_reader :password
   
+  has_many :todo_lists
+
   has_many(
     :authored_secrets,
     :class_name => "Secret",

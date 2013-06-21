@@ -1,0 +1,7 @@
+<h2>To Do Lists </h2>
+
+<script type="application/json" id="lists_json" >
+  <%= @lists.to_json(:include => :todo_items) %>
+</script> 
+
+

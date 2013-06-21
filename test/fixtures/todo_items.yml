@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  completed: false
+  task: MyString
+  todo_list_id: 1
+
+two:
+  completed: false
+  task: MyString
+  todo_list_id: 1
