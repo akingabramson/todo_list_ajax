@@ -5,6 +5,9 @@
 <%= File.read("./app/views/todo_lists/_add_lists.html").html_safe %>
 <%= File.read("./app/views/todo_lists/_form.html").html_safe %>
 
+<%= File.read("./app/views/todo_lists/_add_list_item.html").html_safe %>
+
+
 <%= form_for(@list,
 							:remote => true,
 							:html => {:class => "list_form"}) do |f| %>
@@ -51,18 +54,27 @@
 		})
 
 		$(".new_item_form").on("submit", function(event){
+			event.preventDefault();
 			var form = $(this);
-			var input_val = input.val();
-			var data = form.serialize();
-			console.log(data);
-			// $.ajax({
-			// 	type: "POST", 
-   //   		// url: form.attr("action") + "?&authenticity_token=" + "<%=form_authenticity_token %>", 
-   //    	data: data,
-	  //     success:  function(data){
-			// 	console.log("SENT!");
-			// 	}
-   //    });
+			var dataf = form.serialize();
+
+			$.ajax({
+				type: "POST", 
+     		url: form.attr("action") + "?&authenticity_token=" + "<%=form_authenticity_token %>", 
+      	data: dataf,
+
+	      success:  function(data){	      	
+					var list_id = data.todo_list_id - 1;
+					LISTS[list_id].todo_items.push(data);
+					var add_item_code = $("#add_list_item").html();
+					var add_item_fn = _.template(add_item_code);
+					var added_item = add_item_fn({item: data});
+					var list = $("#list_div_1");
+					console.log(added_item);
+					console.log(list);
+					list.prepend(added_item); //WHY ISN'T THIS WORKING??
+				}
+      });
 
 			return false;
 
