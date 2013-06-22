@@ -1,0 +1,6 @@
+<script type="text/template" id="new_item_form_temp">
+	<form action="./todo_lists/<%=list.id%>/item" method="POST" class="new_item_form">
+	<input name="item[task]" type="text" class="new_item_input list_item hidden"></input>
+	<input type="submit" value="Add Item" class="new_item_submit list_item hidden">
+	</form>
+</script>

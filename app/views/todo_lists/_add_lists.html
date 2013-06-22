@@ -1,0 +1,14 @@
+<script type="text/text" id="add_lists">
+	<li>
+		<div id="list_div_<%=list.id%>" class="list_div">
+		  <a href="#" id="list_link_<%=list.id%>" class="list_link">
+		    <%= list.title %>
+		  </a>
+		  <% var list_item_form = $("#new_item_form_temp").html(); %>
+			<% var list_item_fn = _.template(list_item_form); %>
+			<% var rendered_item_form = list_item_fn({list: list}) %>
+				<ul class="list_item hidden"><%= rendered_item_form %></ul>
+		</div>
+	</li>
+
+</script>

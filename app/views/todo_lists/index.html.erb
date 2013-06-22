@@ -1,56 +1,77 @@
 <h2>To Do Lists </h2>
 
+<%= File.read("./app/views/todo_lists/_list.html").html_safe %>
+
+<%= File.read("./app/views/todo_lists/_add_lists.html").html_safe %>
+<%= File.read("./app/views/todo_lists/_form.html").html_safe %>
+
+<%= form_for(@list,
+							:remote => true,
+							:html => {:class => "list_form"}) do |f| %>
+
+	<%= f.label :title, "New List" %>
+	<%= f.text_field :title %>
+	<%= f.submit %>
+<% end %>
+<br />
+
 <div id="add_here"> </div>
 
-<a href="#" id="data_list_id">
+<a href="#" id="data_list_id"></a>
 
 <script>
+
 	$(function () {
 		var LISTS = <%= @lists.to_json.html_safe %>
 
-		_.each(LISTS, function(list) {
-			// wrap list in a div
-			var list_div = $("<div>");
-			list_div.attr('id', "list"+list.id+"div");
-			
 
-			var list_link = $("<a>");
-			list_link.addClass("list_link");
-			list_link.attr({'id': 'list'+list.id,
-											'href': '#'});
-			list_link.text(list.title);
-			list_div.append(list_link);
 
-			// add link to div
+		var display_lists_code = $("#display_lists").html();
+		var display_lists_fn = _.template(display_lists_code);
+		var rendered_lists = display_lists_fn({LISTS: LISTS});
 
-			var items = list.todo_items;
-			_.each(items, function(item) {
-				// each item might have sub-items, so we put it in a ul
-				list_wrapper = $("<ul>");
-				list_wrapper.addClass("list_wrapper");
+		$('#add_here').append(rendered_lists);
 
-				var list_item = $("<li>");
-				list_item.addClass("hidden");
-				list_item.addClass("list_item");
-				list_item.attr({'id': 'list'+list.id+'item'+item.id});
-				list_item.text(item.task);
 
-				list_wrapper.append(list_item)
-				list_div.append(list_wrapper);
-			});
-			// append new item form here
-
-			$('#add_here').append(list_div);
-		});
-		
-		$('.list_link').on('click', function(event) {
+		$('.list_ul').on('click', ".list_link", function(event) {
 			var link = $(event.currentTarget);					
-			var list_div = link.closest('div')
+			var list_div = link.closest('div');
 			var items = list_div.find(".list_item");
 			items.toggleClass("hidden");
-		// append the items to the list
+
 		});
-	})
+
+		$('.list_form').on('ajax:success', function(event, data){
+			LISTS.push(data);
+			$('#todo_list_title').text("");
+			var add_lists_code = $("#add_lists").html();
+			var add_lists_fn = _.template(add_lists_code);
+			var added_list = add_lists_fn({list: data});
+			$(".list_ul").append(added_list);
+		})
+
+		$(".new_item_form").on("submit", function(event){
+			var form = $(this);
+			var input_val = input.val();
+			var data = form.serialize();
+			console.log(data);
+			// $.ajax({
+			// 	type: "POST", 
+   //   		// url: form.attr("action") + "?&authenticity_token=" + "<%=form_authenticity_token %>", 
+   //    	data: data,
+	  //     success:  function(data){
+			// 	console.log("SENT!");
+			// 	}
+   //    });
+
+			return false;
+
+		})
+
+		// can erb encode auth token
+
+
+})
 
 	
 </script>
